@@ -68,8 +68,7 @@ class Mender(Rests):
         """
         List devices
 
-        method: GET
-        path: /devices
+        GET /devices
 
 
         :return: List[Device]
@@ -81,74 +80,68 @@ class Mender(Rests):
         """
         Remove selected device
 
-        method: DELETE
-        path: /devices/{id}
+        DELETE /devices/{id}
 
         :param str id: Device identifier. (required)
 
         :return: None
         """
-        return await self.delete(f"/inventory/devices/{id}", {"id": id, })
+        return await self.delete(f"/inventory/devices/{id}", {  "id": id,  } )
 
     async def devices_id_get(self, id: str) -> Device:
         """
         Get a selected device
 
-        method: GET
-        path: /devices/{id}
+        GET /devices/{id}
 
         :param str id: Device identifier. (required)
 
         :return: Device
         """
-        return await self.get(f"/inventory/devices/{id}", {"id": id, })
+        return await self.get(f"/inventory/devices/{id}", {  "id": id,  } )
 
     async def devices_id_group_get(self, id: str) -> Group:
         """
         Get a selected device&#39;s group
 
-        method: GET
-        path: /devices/{id}/group
+        GET /devices/{id}/group
 
         :param str id: Device identifier. (required)
 
         :return: Group
         """
-        return await self.get(f"/inventory/devices/{id}/group", {"id": id, })
+        return await self.get(f"/inventory/devices/{id}/group", {  "id": id,  } )
 
     async def devices_id_group_name_delete(self, id: str, name: str) -> None:
         """
         Remove a device from a group
 
-        method: DELETE
-        path: /devices/{id}/group/{name}
+        DELETE /devices/{id}/group/{name}
 
         :param str id: Device identifier. (required)
         :param str name: Group name. (required)
 
         :return: None
         """
-        return await self.delete(f"/inventory/devices/{id}/group/{name}", {"id": id, "name": name, })
+        return await self.delete(f"/inventory/devices/{id}/group/{name}", {  "id": id,  "name": name,  } )
 
     async def devices_id_group_put(self, id: str) -> None:
         """
         Add a device to a group
 
-        method: PUT
-        path: /devices/{id}/group
+        PUT /devices/{id}/group
 
         :param str id: Device identifier. (required)
 
         :return: None
         """
-        return await self.put(f"/inventory/devices/{id}/group", {"id": id, })
+        return await self.put(f"/inventory/devices/{id}/group", {  "id": id,  } )
 
     async def groups_get(self) -> List[str]:
         """
         List groups
 
-        method: GET
-        path: /groups
+        GET /groups
 
 
         :return: List[str]
@@ -159,14 +152,14 @@ class Mender(Rests):
         """
         List the devices belonging to a given group
 
-        method: GET
-        path: /groups/{name}/devices
+        GET /groups/{name}/devices
 
         :param str name: Group name. (required)
 
         :return: List[str]
         """
-        return await self.get(f"/inventory/groups/{name}/devices", {"name": name, })
+        return await self.get(f"/inventory/groups/{name}/devices", {  "name": name,  } )
+
 
     async def _auth_login_post(self, username: str, password: str) -> ClientResponse:
         """
