@@ -3,11 +3,13 @@
 ## Usage
 
 ```py
-mender = Mender(base_url = 'https://docker.mender.io/api/management/v1/inventory')
+mender = Mender(base_url = 'https://docker.mender.io/api/management/v1')
 devices = await mender.devices_get()
 ```
 
 ## Device inventory
+
+`/inventory`
 
 ### API Endpoints
 
@@ -23,3 +25,22 @@ Class | Method | HTTP request | Description
 *Mender* | **devices_id_group_put** | **PUT** /devices/{id}/group | Add a device to a group
 *Mender* | **groups_get** | **GET** /groups | List groups
 *Mender* | **groups_name_devices_get** | **GET** /groups/{name}/devices | List the devices belonging to a given group
+
+## User administration and authentication
+
+`/useradm`
+
+### API Endpoints
+
+All URIs are relative to *https://docker.mender.io/api/management/v1/useradm*
+
+Class | Method | HTTP request | Description
+------------ | ------------- | ------------- | -------------
+*Mender* | **auth_login_post** | **POST** /auth/login | Log in to Mender
+*Mender* | **settings_get** | **GET** /settings | Get user settings
+*Mender* | **settings_post** | **POST** /settings | Set user settings
+*Mender* | **users_get** | **GET** /users | List users
+*Mender* | **users_id_delete** | **DELETE** /users/{id} | Remove user from the system
+*Mender* | **users_id_get** | **GET** /users/{id} | Get user information
+*Mender* | **users_id_put** | **PUT** /users/{id} | Update user information
+*Mender* | **users_post** | **POST** /users | Create user
