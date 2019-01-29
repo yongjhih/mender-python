@@ -1,24 +1,26 @@
 # -*- coding: future_fstrings -*-
 from datetime import datetime
-from typing import Any, Dict, List, Optional, NewType, TypeVar
+from typing import Optional
+
 from dataclasses import dataclass
+
 
 @dataclass
 class User:
+    email: str
     """
     A unique email address.
     """
-    email: str
+    id: str
     """
     User Id.
     """
-    id: str
+    created_ts: Optional[datetime]
     """
     Server-side timestamp of the user creation. 
     """
-    created_ts: Optional[datetime]
+    updated_ts: Optional[datetime]
     """
     Server-side timestamp of the last user information update. 
     """
-    updated_ts: Optional[datetime]
 

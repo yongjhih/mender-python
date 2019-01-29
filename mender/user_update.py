@@ -1,16 +1,18 @@
 # -*- coding: future_fstrings -*-
 
-from typing import Any, Dict, List, Optional, NewType, TypeVar
+from typing import Optional
+
 from dataclasses import dataclass
+
 
 @dataclass
 class UserUpdate:
+    email: Optional[str]
     """
     A unique email address.
     """
-    email: Optional[str]
+    password: Optional[str]
     """
     Password.
     """
-    password: Optional[str]
 

@@ -9,16 +9,16 @@ from .attribute import Attribute
 
 @dataclass
 class Device:
+    id: Optional[str]
     """
     Mender-assigned unique ID.
     """
-    id: Optional[str]
+    updated_ts: Optional[str]
     """
     Timestamp of the most recent attribute update.
     """
-    updated_ts: Optional[str]
+    attributes: Optional[Attribute]
     """
     A list of attribute descriptors.
     """
-    attributes: Optional[Attribute]
 
