@@ -1,7 +1,11 @@
 # -*- coding: future_fstrings -*-
 
-from typing import Any, Dict, List, Optional, NewType, TypeVar
+from typing import Optional
+
 from dataclasses import dataclass
+
+from .attribute import Attribute
+
 
 @dataclass
 class Device:
