@@ -1,7 +1,7 @@
 # Get Started
 
-* [Inventory](inventory/)
-* [User Adm](useradm/)
-* [Device Adm](deviceadm/)
-* [Device Auth](deviceauth/)
-* [Deployments](deployments/)
+* [Inventory](/mender-python/inventory/)
+* [User Adm](/mender-python/useradm/)
+* [Device Adm](/mender-python/deviceadm/)
+* [Device Auth](/mender-python/deviceauth/)
+* [Deployments](/mender-python/deployments/)
