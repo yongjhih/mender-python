@@ -8,5 +8,5 @@ class Count:
     """
     The count of requested items.
     """
-    count: Optional[int]
+    count: Optional[int] = None
 

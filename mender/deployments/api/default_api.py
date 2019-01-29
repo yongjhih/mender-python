@@ -16,55 +16,58 @@ from aiohttp.http_websocket import WSMessage
 from dataclasses import dataclass
 from requests.exceptions import HTTPError
 
-class Rests():
-    def __init__(self, base_url: str):
-        self.base_url = base_url
-        self.session = aiohttp.ClientSession()
+#from .* import *
 
-    def url(url: str) -> str:
+class JwtAuth(aiohttp.helpers.BasicAuth):
+    def __init__(self, access_token: str):
+        self.access_token = access_token
+        self.jwt = f"Bearer {self.access_token}"
+
+    def encode(self) -> str:
+        return self.jwt
+
+
+class Rests():
+    def __init__(self, base_url: str, session: aiohttp.ClientSession = aiohttp.ClientSession()):
+        self.base_url = base_url
+        self.session = session
+
+    def url(self, url: str) -> str:
         return url if url.startswith('http://') or url.startswith('https://') else f'{self.base_url}/{url}'
 
-    async def get(self, url: str):
-        async with self.session.get(url(url)) as response:
-            return await response
+    async def get(self, url: str) -> ClientResponse:
+        return await self.session.get(self.url(url))
 
-    async def post(self, url: str, data: Optional[Dict]):
-        async with self.session.post(url(url)) as response:
-            return await response
+    async def post(self, url: str, data: Optional[Dict] = None) -> ClientResponse:
+        return await self.session.post(url=self.url(url), data=data)
 
-    async def put(self, url: str, data: Optional[Dict]):
-        async with self.session.put(url(url)) as response:
-            return await response
+    async def put(self, url: str, data: Optional[Dict] = None) -> ClientResponse:
+        return await self.session.put(url=self.url(url), data=data)
 
-    async def delete(self, url: str):
-        async with self.session.delete(url(url)) as response:
-            return await response
+    async def delete(self, url: str) -> ClientResponse:
+        return await self.session.delete(self.url(url))
 
-    async def head(self, url: str):
-        async with self.session.head(url(url)) as response:
-            return await response
+    async def head(self, url: str) -> ClientResponse:
+        return await self.session.head(self.url(url))
 
-    async def options(self, url: str):
-        async with self.session.head(url(url)) as response:
-            return await response
+    async def options(self, url: str) -> ClientResponse:
+        return await self.session.head(self.url(url))
 
-    async def patch(self, url: str, data: Optional[Dict]):
-        async with self.session.head(url(url)) as response:
-            return await response
+    async def patch(self, url: str, data: Optional[Dict] = None) -> ClientResponse:
+        return await self.session.head(url=self.url(url), data=data)
 
 
 class DefaultApi(Rests):
 
-    def __init__(self, base_url: str = https://docker.mender.io/api/management/v1/deployments):
-        super().__init__(base_url)
+    def __init__(self, base_url: str = 'https://docker.mender.io/api/management/v1/deployments', session: aiohttp.ClientSession = aiohttp.ClientSession()):
+        super().__init__(base_url, session)
 
 
     async def artifacts_get(self) -> List[Artifact]:
         """
         List known artifacts
 
-        method: GET
-        path: /artifacts
+        GET /artifacts
 
 
         :return: List[Artifact]
@@ -75,8 +78,7 @@ class DefaultApi(Rests):
         """
         Delete the artifact
 
-        method: DELETE
-        path: /artifacts/{id}
+        DELETE /artifacts/{id}
 
         :param str id: Artifact identifier. (required)
 
@@ -88,8 +90,7 @@ class DefaultApi(Rests):
         """
         Get the download link of a selected artifact
 
-        method: GET
-        path: /artifacts/{id}/download
+        GET /artifacts/{id}/download
 
         :param str id: Artifact identifier. (required)
 
@@ -101,8 +102,7 @@ class DefaultApi(Rests):
         """
         Get the details of a selected artifact
 
-        method: GET
-        path: /artifacts/{id}
+        GET /artifacts/{id}
 
         :param str id: Artifact identifier. (required)
 
@@ -114,8 +114,7 @@ class DefaultApi(Rests):
         """
         Update description of a selected artifact
 
-        method: PUT
-        path: /artifacts/{id}
+        PUT /artifacts/{id}
 
         :param str id: Artifact identifier. (required)
 
@@ -127,8 +126,7 @@ class DefaultApi(Rests):
         """
         Upload mender artifact
 
-        method: POST
-        path: /artifacts
+        POST /artifacts
 
 
         :return: None
@@ -139,8 +137,7 @@ class DefaultApi(Rests):
         """
         Get the log of a selected device&#39;s deployment
 
-        method: GET
-        path: /deployments/{deployment_id}/devices/{device_id}/log
+        GET /deployments/{deployment_id}/devices/{device_id}/log
 
         :param str deployment_id: Deployment identifier. (required)
         :param str device_id: Device identifier. (required)
@@ -153,8 +150,7 @@ class DefaultApi(Rests):
         """
         List devices of a deployment
 
-        method: GET
-        path: /deployments/{deployment_id}/devices
+        GET /deployments/{deployment_id}/devices
 
         :param str deployment_id: Deployment identifier. (required)
 
@@ -166,8 +162,7 @@ class DefaultApi(Rests):
         """
         Get the statistics of a selected deployment
 
-        method: GET
-        path: /deployments/{deployment_id}/statistics
+        GET /deployments/{deployment_id}/statistics
 
         :param str deployment_id: Deployment identifier (required)
 
@@ -179,8 +174,7 @@ class DefaultApi(Rests):
         """
         Abort the deployment
 
-        method: PUT
-        path: /deployments/{deployment_id}/status
+        PUT /deployments/{deployment_id}/status
 
         :param str deployment_id: Deployment identifier. (required)
 
@@ -192,8 +186,7 @@ class DefaultApi(Rests):
         """
         Remove device from all deployments
 
-        method: DELETE
-        path: /deployments/devices/{id}
+        DELETE /deployments/devices/{id}
 
         :param str id: System wide device identifier (required)
 
@@ -205,8 +198,7 @@ class DefaultApi(Rests):
         """
         Find all deployments
 
-        method: GET
-        path: /deployments
+        GET /deployments
 
 
         :return: List[Deployment]
@@ -217,8 +209,7 @@ class DefaultApi(Rests):
         """
         Get the details of a selected deployment
 
-        method: GET
-        path: /deployments/{id}
+        GET /deployments/{id}
 
         :param str id: Deployment identifier. (required)
 
@@ -230,8 +221,7 @@ class DefaultApi(Rests):
         """
         Create a deployment
 
-        method: POST
-        path: /deployments
+        POST /deployments
 
 
         :return: None
@@ -242,8 +232,7 @@ class DefaultApi(Rests):
         """
         List releases
 
-        method: GET
-        path: /deployments/releases
+        GET /deployments/releases
 
 
         :return: List[Release]
@@ -254,8 +243,7 @@ class DefaultApi(Rests):
         """
         Get storage limit and current storage usage
 
-        method: GET
-        path: /limits/storage
+        GET /limits/storage
 
 
         :return: StorageLimit

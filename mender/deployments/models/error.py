@@ -8,9 +8,9 @@ class Error:
     """
     Description of the error.
     """
-    error: Optional[str]
+    error: Optional[str] = None
     """
     Request ID (same as in X-MEN-RequestID header).
     """
-    request_id: Optional[str]
+    request_id: Optional[str] = None
 

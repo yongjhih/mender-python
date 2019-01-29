@@ -8,9 +8,9 @@ class ArtifactInfo:
     """
     
     """
-    format: Optional[str]
+    format: Optional[str] = None
     """
     
     """
-    version: Optional[int]
+    version: Optional[int] = None
 

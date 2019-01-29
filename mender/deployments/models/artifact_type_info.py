@@ -8,5 +8,5 @@ class ArtifactTypeInfo:
     """
     
     """
-    type: Optional[str]
+    type: Optional[str] = None
 

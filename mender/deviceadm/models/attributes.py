@@ -8,13 +8,13 @@ class Attributes:
     """
     MAC address.
     """
-    mac: Optional[str]
+    mac: Optional[str] = None
     """
     Stock keeping unit.
     """
-    sku: Optional[str]
+    sku: Optional[str] = None
     """
     Serial number.
     """
-    sn: Optional[str]
+    sn: Optional[str] = None
 

@@ -8,29 +8,29 @@ class Device:
     """
     Mender assigned Device ID.
     """
-    id: Optional[str]
+    id: Optional[str] = None
     """
     
     """
-    identity_data: Optional[IdentityData]
+    identity_data: Optional[IdentityData] = None
     """
     
     """
-    status: Optional[str]
+    status: Optional[str] = None
     """
     Created timestamp
     """
-    created_ts: Optional[str]
+    created_ts: Optional[str] = None
     """
     Updated timestamp
     """
-    updated_ts: Optional[str]
+    updated_ts: Optional[str] = None
     """
     
     """
-    auth_sets: Optional[AuthSet]
+    auth_sets: Optional[AuthSet] = None
     """
     Devices that are part of ongoing decomissioning process will return True
     """
-    decommissioning: Optional[bool]
+    decommissioning: Optional[bool] = None
 

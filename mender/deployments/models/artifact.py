@@ -24,7 +24,7 @@ class Artifact:
     """
     Idicates if artifact is signed or not.
     """
-    signed: Optional[bool]
+    signed: Optional[bool] = None
     """
     Represents creation / last edition of any of the artifact properties. 
     """
@@ -32,9 +32,9 @@ class Artifact:
     """
     
     """
-    info: Optional[ArtifactInfo]
+    info: Optional[ArtifactInfo] = None
     """
     
     """
-    updates: Optional[Update]
+    updates: Optional[Update] = None
 

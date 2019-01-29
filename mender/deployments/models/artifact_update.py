@@ -8,5 +8,5 @@ class ArtifactUpdate:
     """
     
     """
-    description: Optional[str]
+    description: Optional[str] = None
 

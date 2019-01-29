@@ -8,17 +8,17 @@ class UpdateFile:
     """
     
     """
-    name: Optional[str]
+    name: Optional[str] = None
     """
     
     """
-    checksum: Optional[str]
+    checksum: Optional[str] = None
     """
     
     """
-    size: Optional[int]
+    size: Optional[int] = None
     """
     
     """
-    date: Optional[datetime]
+    date: Optional[datetime] = None
 

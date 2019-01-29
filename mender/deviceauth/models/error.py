@@ -8,5 +8,5 @@ class Error:
     """
     Description of the error
     """
-    error: Optional[str]
+    error: Optional[str] = None
 

@@ -12,7 +12,7 @@ class Device:
     """
     
     """
-    finished: Optional[datetime]
+    finished: Optional[datetime] = None
     """
     
     """
@@ -20,11 +20,11 @@ class Device:
     """
     
     """
-    created: Optional[datetime]
+    created: Optional[datetime] = None
     """
     
     """
-    device_type: Optional[str]
+    device_type: Optional[str] = None
     """
     Availability of the device&#39;s deployment log.
     """
@@ -32,9 +32,9 @@ class Device:
     """
     State reported by device
     """
-    state: Optional[str]
+    state: Optional[str] = None
     """
     Additional state information
     """
-    substate: Optional[str]
+    substate: Optional[str] = None
 

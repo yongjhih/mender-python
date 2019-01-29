@@ -8,9 +8,9 @@ class Release:
     """
     release name. 
     """
-    name: Optional[str]
+    name: Optional[str] = None
     """
     list of artifacts for this release. 
     """
-    artifacts: Optional[Artifact]
+    artifacts: Optional[Artifact] = None
 
