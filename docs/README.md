@@ -1,7 +1,8 @@
 # Get Started
 
-* [Inventory](/mender-python/inventory/)
-* [User Adm](/mender-python/useradm/)
-* [Device Adm](/mender-python/deviceadm/)
-* [Device Auth](/mender-python/deviceauth/)
-* [Deployments](/mender-python/deployments/)
+* <a href="/mender-python/inventory/">Inventory</a>
+* <a href="/mender-python/useradm/">User Adm</a>
+* <a href="/mender-python/deviceadm/">Device Adm</a>
+* <a href="/mender-python/deviceauth/">Device Auth</a>
+* <a href="/mender-python/deployments/">Deployments</a>
+

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-menders=(
-    ["inventory"]="https://github.com/mendersoftware/inventory/raw/master/docs/management_api.yml"
-    ["useradm"]="https://github.com/mendersoftware/useradm/raw/master/docs/management_api.yml"
-    ["deviceadm"]="https://github.com/mendersoftware/deviceadm/raw/master/docs/management_api.yml"
-    ["deployments"]="https://github.com/mendersoftware/deployments/raw/master/docs/management_api.yml"
-    ["deviceauth"]="https://github.com/mendersoftware/deviceauth/raw/master/docs/management_api.yml"
+declare -A menders=(
+    ["inventory"]="https://raw.githubusercontent.com/mendersoftware/inventory/master/docs/management_api.yml"
+    ["useradm"]="https://raw.githubusercontent.com/mendersoftware/useradm/master/docs/management_api.yml"
+    ["deviceadm"]="https://raw.githubusercontent.com/mendersoftware/deviceadm/master/docs/management_api.yml"
+    ["deployments"]="https://raw.githubusercontent.com/mendersoftware/deployments/master/docs/management_api.yml"
+    ["deviceauth"]="https://raw.githubusercontent.com/mendersoftware/deviceauth/master/docs/management_api.yml"
 )
 
 for mender in "${!menders[@]}"; do
