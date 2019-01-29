@@ -7,11 +7,11 @@ from dataclasses import dataclass
 
 @dataclass
 class UserUpdate:
-    email: Optional[str]
+    email: Optional[str] = None
     """
     A unique email address.
     """
-    password: Optional[str]
+    password: Optional[str] = None
     """
     Password.
     """

@@ -75,7 +75,7 @@ class Mender(Rests):
         :return: List[Device]
         """
         res = await self.get(f"/inventory/devices")
-        return jsontofu.decode(res.json(), List[Device])
+        return list(map(lambda x: jsontofu.decode(x, Device), await res.json()))
 
     async def devices_id_delete(self, id: str) -> None:
         """
