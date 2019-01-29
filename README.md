@@ -1,7 +1,15 @@
-# Documentation for Device inventory
+# Mender
 
-<a name="documentation-for-api-endpoints"></a>
-## Documentation for API Endpoints
+## Usage
+
+```py
+mender = Mender(base_url = 'https://docker.mender.io/api/management/v1/inventory')
+devices = await mender.devices_get()
+```
+
+## Device inventory
+
+### API Endpoints
 
 All URIs are relative to *https://docker.mender.io/api/management/v1/inventory*
 
