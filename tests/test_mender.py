@@ -1,26 +1,15 @@
 # -*- coding: future_fstrings -*-
+import os
 
-import jsonpickle
+import aiohttp
+import pytest
 
 from mender import Mender
 
-import responses
-import requests
-import uuid
-import os
-import json
-import pytest
-from unittest.mock import MagicMock
-
-import ssl
-
-from typing import Any, Callable, Dict, List, Optional, Union, NewType, Iterable, TypeVar
-
-from _pytest.fixtures import SubRequest
 
 @pytest.mark.asyncio
 async def test_login():
+    #mender = Mender(base_url=os.environ["MENDER_URL"], session=aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)))
     mender = Mender()
-    mender.login()
-    res = '''{}''' # Mender.device_get(id = "")
-    assert '''{}''' == res
+    token = await mender.login(os.environ["MENDER_PASSWORD"], os.environ["MENDER_PASSWORD"])
+    assert None != token

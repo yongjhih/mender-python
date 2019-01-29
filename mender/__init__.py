@@ -20,6 +20,7 @@ from .user import User
 from .user_new import UserNew
 from .user_update import UserUpdate
 
+
 class JwtAuth(aiohttp.helpers.BasicAuth):
     def __init__(self, access_token: str):
         self.access_token = access_token
@@ -28,46 +29,40 @@ class JwtAuth(aiohttp.helpers.BasicAuth):
     def encode(self) -> str:
         return self.jwt
 
+
 class Rests():
-    def __init__(self, base_url: str):
+    def __init__(self, base_url: str, session: aiohttp.ClientSession = aiohttp.ClientSession()):
         self.base_url = base_url
-        self.session = aiohttp.ClientSession()
+        self.session = session
 
     def url(self, url: str) -> str:
         return url if url.startswith('http://') or url.startswith('https://') else f'{self.base_url}/{url}'
 
     async def get(self, url: str) -> ClientResponse:
-        async with self.session.get(url(url)) as response:
-            return await response
+        return await self.session.get(self.url(url))
 
-    async def post(self, url: str, data: Optional[Dict]) -> ClientResponse:
-        async with self.session.post(url(url), data) as response:
-            return await response
+    async def post(self, url: str, data: Optional[Dict] = None) -> ClientResponse:
+        return await self.session.post(url=self.url(url), data=data)
 
-    async def put(self, url: str, data: Optional[Dict]) -> ClientResponse:
-        async with self.session.put(url(url), data) as response:
-            return await response
+    async def put(self, url: str, data: Optional[Dict] = None) -> ClientResponse:
+        return await self.session.put(url=self.url(url), data=data)
 
     async def delete(self, url: str) -> ClientResponse:
-        async with self.session.delete(url(url)) as response:
-            return await response
+        return await self.session.delete(self.url(url))
 
     async def head(self, url: str) -> ClientResponse:
-        async with self.session.head(url(url)) as response:
-            return await response
+        return await self.session.head(self.url(url))
 
     async def options(self, url: str) -> ClientResponse:
-        async with self.session.head(url(url)) as response:
-            return await response
+        return await self.session.head(self.url(url))
 
-    async def patch(self, url: str, data: Optional[Dict]) -> ClientResponse:
-        async with self.session.head(url(url), data) as response:
-            return await response
+    async def patch(self, url: str, data: Optional[Dict] = None) -> ClientResponse:
+        return await self.session.head(url=self.url(url), data=data)
 
 
 class Mender(Rests):
-    def __init__(self, base_url: str = 'https://docker.mender.io/api/management/v1'):
-        super().__init__(base_url)
+    def __init__(self, base_url: str, session: aiohttp.ClientSession = aiohttp.ClientSession()):
+        super().__init__(base_url, session)
 
     async def devices_get(self) -> List[Device]:
         """
@@ -182,7 +177,7 @@ class Mender(Rests):
 
         :return: None
         """
-        self.session._default_auth = (username, password)
+        self.session._default_auth = aiohttp.helpers.BasicAuth(username, password)
         return await self.post(f"/useradm/auth/login")
 
     async def login(self, username: str, password: str) -> str:
@@ -238,7 +233,7 @@ class Mender(Rests):
 
         :return: None
         """
-        return await self.delete(f"/useradm/users/{id}", {  "id": id,  } )
+        return await self.delete(f"/useradm/users/{id}", {"id": id, })
 
     async def users_id_get(self, id: str) -> User:
         """
@@ -251,7 +246,7 @@ class Mender(Rests):
 
         :return: User
         """
-        return await self.get(f"/useradm/users/{id}", {  "id": id,  } )
+        return await self.get(f"/useradm/users/{id}", {"id": id, })
 
     async def users_id_put(self, id: str) -> None:
         """
@@ -264,7 +259,7 @@ class Mender(Rests):
 
         :return: None
         """
-        return await self.put(f"/useradm/users/{id}", {  "id": id,  } )
+        return await self.put(f"/useradm/users/{id}", {"id": id, })
 
     async def users_post(self) -> None:
         """
