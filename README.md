@@ -44,3 +44,8 @@ Class | Method | HTTP request | Description
 *Mender* | **users_id_get** | **GET** /users/{id} | Get user information
 *Mender* | **users_id_put** | **PUT** /users/{id} | Update user information
 *Mender* | **users_post** | **POST** /users | Create user
+
+## References
+
+* https://github.com/yongjhih/mender.js
+* https://github.com/yongjhih/openapi-generator/tree/mender/modules/openapi-generator/src/main/resources/python-typing-client
