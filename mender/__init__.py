@@ -13,6 +13,11 @@ import jsontofu
 
 from .device import Device
 from .group import Group
+from .attribute import Attribute
+from .error import Error
+from .user import User
+from .user_new import UserNew
+from .user_update import UserUpdate
 
 
 class Rests():
@@ -53,7 +58,7 @@ class Rests():
 
 
 class Mender(Rests):
-    def __init__(self, base_url: str = 'https://docker.mender.io/api/management/v1/inventory'):
+    def __init__(self, base_url: str = 'https://docker.mender.io/api/management/v1'):
         super().__init__(base_url)
 
     async def devices_get(self) -> List[Device]:
@@ -66,7 +71,7 @@ class Mender(Rests):
 
         :return: List[Device]
         """
-        return await self.get(f"/devices")
+        return await self.get(f"/inventory/devices")
 
     async def devices_id_delete(self, id: str) -> None:
         """
@@ -79,7 +84,7 @@ class Mender(Rests):
 
         :return: None
         """
-        return await self.delete(f"/devices/{id}", {"id": id, })
+        return await self.delete(f"/inventory/devices/{id}", {"id": id, })
 
     async def devices_id_get(self, id: str) -> Device:
         """
@@ -92,7 +97,7 @@ class Mender(Rests):
 
         :return: Device
         """
-        return await self.get(f"/devices/{id}", {"id": id, })
+        return await self.get(f"/inventory/devices/{id}", {"id": id, })
 
     async def devices_id_group_get(self, id: str) -> Group:
         """
@@ -105,7 +110,7 @@ class Mender(Rests):
 
         :return: Group
         """
-        return await self.get(f"/devices/{id}/group", {"id": id, })
+        return await self.get(f"/inventory/devices/{id}/group", {"id": id, })
 
     async def devices_id_group_name_delete(self, id: str, name: str) -> None:
         """
@@ -119,7 +124,7 @@ class Mender(Rests):
 
         :return: None
         """
-        return await self.delete(f"/devices/{id}/group/{name}", {"id": id, "name": name, })
+        return await self.delete(f"/inventory/devices/{id}/group/{name}", {"id": id, "name": name, })
 
     async def devices_id_group_put(self, id: str) -> None:
         """
@@ -132,7 +137,7 @@ class Mender(Rests):
 
         :return: None
         """
-        return await self.put(f"/devices/{id}/group", {"id": id, })
+        return await self.put(f"/inventory/devices/{id}/group", {"id": id, })
 
     async def groups_get(self) -> List[str]:
         """
@@ -144,7 +149,7 @@ class Mender(Rests):
 
         :return: List[str]
         """
-        return await self.get(f"/groups")
+        return await self.get(f"/inventory/groups")
 
     async def groups_name_devices_get(self, name: str) -> List[str]:
         """
@@ -157,4 +162,103 @@ class Mender(Rests):
 
         :return: List[str]
         """
-        return await self.get(f"/groups/{name}/devices", {"name": name, })
+        return await self.get(f"/inventory/groups/{name}/devices", {"name": name, })
+
+    async def auth_login_post(self) -> None:
+        """
+        Log in to Mender
+
+        method: POST
+        path: /auth/login
+
+
+        :return: None
+        """
+        return await self.post(f"/useradm/auth/login")
+
+    async def settings_get(self) -> object:
+        """
+        Get user settings
+
+        method: GET
+        path: /settings
+
+
+        :return: object
+        """
+        return await self.get(f"/useradm/settings")
+
+    async def settings_post(self) -> None:
+        """
+        Set user settings
+
+        method: POST
+        path: /settings
+
+
+        :return: None
+        """
+        return await self.post(f"/useradm/settings")
+
+    async def users_get(self) -> List[User]:
+        """
+        List users
+
+        method: GET
+        path: /users
+
+
+        :return: List[User]
+        """
+        return await self.get(f"/useradm/users")
+
+    async def users_id_delete(self, id: str) -> None:
+        """
+        Remove user from the system
+
+        method: DELETE
+        path: /users/{id}
+
+        :param str id: User id. (required)
+
+        :return: None
+        """
+        return await self.delete(f"/useradm/users/{id}", {  "id": id,  } )
+
+    async def users_id_get(self, id: str) -> User:
+        """
+        Get user information
+
+        method: GET
+        path: /users/{id}
+
+        :param str id: User id. (required)
+
+        :return: User
+        """
+        return await self.get(f"/useradm/users/{id}", {  "id": id,  } )
+
+    async def users_id_put(self, id: str) -> None:
+        """
+        Update user information
+
+        method: PUT
+        path: /users/{id}
+
+        :param str id: User id. (required)
+
+        :return: None
+        """
+        return await self.put(f"/useradm/users/{id}", {  "id": id,  } )
+
+    async def users_post(self) -> None:
+        """
+        Create user
+
+        method: POST
+        path: /users
+
+
+        :return: None
+        """
+        return await self.post(f"/useradm/users")
