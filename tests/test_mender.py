@@ -20,5 +20,7 @@ from _pytest.fixtures import SubRequest
 
 @pytest.mark.asyncio
 async def test_login():
+    mender = Mender()
+    mender.login()
     res = '''{}''' # Mender.device_get(id = "")
     assert '''{}''' == res

@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional, NewType, TypeVar
 import aiohttp
 import jsonpickle
 import jsontofu
+from aiohttp import ClientResponse
 
 from .device import Device
 from .group import Group
@@ -19,6 +20,13 @@ from .user import User
 from .user_new import UserNew
 from .user_update import UserUpdate
 
+class JwtAuth(aiohttp.helpers.BasicAuth):
+    def __init__(self, access_token: str):
+        self.access_token = access_token
+        self.jwt = f"Bearer {self.access_token}"
+
+    def encode(self) -> str:
+        return self.jwt
 
 class Rests():
     def __init__(self, base_url: str):
@@ -28,31 +36,31 @@ class Rests():
     def url(self, url: str) -> str:
         return url if url.startswith('http://') or url.startswith('https://') else f'{self.base_url}/{url}'
 
-    async def get(self, url: str):
+    async def get(self, url: str) -> ClientResponse:
         async with self.session.get(url(url)) as response:
             return await response
 
-    async def post(self, url: str, data: Optional[Dict]):
+    async def post(self, url: str, data: Optional[Dict]) -> ClientResponse:
         async with self.session.post(url(url), data) as response:
             return await response
 
-    async def put(self, url: str, data: Optional[Dict]):
+    async def put(self, url: str, data: Optional[Dict]) -> ClientResponse:
         async with self.session.put(url(url), data) as response:
             return await response
 
-    async def delete(self, url: str):
+    async def delete(self, url: str) -> ClientResponse:
         async with self.session.delete(url(url)) as response:
             return await response
 
-    async def head(self, url: str):
+    async def head(self, url: str) -> ClientResponse:
         async with self.session.head(url(url)) as response:
             return await response
 
-    async def options(self, url: str):
+    async def options(self, url: str) -> ClientResponse:
         async with self.session.head(url(url)) as response:
             return await response
 
-    async def patch(self, url: str, data: Optional[Dict]):
+    async def patch(self, url: str, data: Optional[Dict]) -> ClientResponse:
         async with self.session.head(url(url), data) as response:
             return await response
 
@@ -71,7 +79,8 @@ class Mender(Rests):
 
         :return: List[Device]
         """
-        return await self.get(f"/inventory/devices")
+        res = await self.get(f"/inventory/devices")
+        return jsontofu.decode(res.json(), List[Device])
 
     async def devices_id_delete(self, id: str) -> None:
         """
@@ -164,17 +173,23 @@ class Mender(Rests):
         """
         return await self.get(f"/inventory/groups/{name}/devices", {"name": name, })
 
-    async def auth_login_post(self) -> None:
+    async def _auth_login_post(self, username: str, password: str) -> ClientResponse:
         """
         Log in to Mender
 
         method: POST
         path: /auth/login
 
-
         :return: None
         """
+        self.session._default_auth = (username, password)
         return await self.post(f"/useradm/auth/login")
+
+    async def login(self, username: str, password: str) -> str:
+        res = await self._auth_login_post(username, password)
+        token = await res.text()
+        self.session._default_auth = JwtAuth(token)
+        return token
 
     async def settings_get(self) -> object:
         """
