@@ -7,3 +7,6 @@ __pycache__/
 .mypy_cache/
 .coverage
 *.orig
+
+build/
+dist/

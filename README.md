@@ -18,6 +18,20 @@ async for device in mender.get_devices(attributes={"hostname": 'xxx-ffffffffffff
     print(device)
 ```
 
+## Installation
+
+Using pip:
+
+```sh
+pip install mender
+```
+
+Using pipenv:
+
+```sh
+pipenv install mender
+```
+
 ## Device inventory
 
 `/inventory`
