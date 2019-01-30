@@ -32,6 +32,13 @@ Using pipenv:
 pipenv install mender
 ```
 
+## Deployment
+
+```sh
+pipenv run python3 setup.py sdist bdist_wheel
+pipenv run twine upload dist/*
+```
+
 ## Device inventory
 
 `/inventory`
