@@ -38,8 +38,12 @@ class Rests():
     def url(self, url: str) -> str:
         return url if url.startswith('http://') or url.startswith('https://') else f'{self.base_url}/{url}'
 
-    async def get(self, url: str) -> ClientResponse:
-        return await self.session.get(self.url(url))
+    @staticmethod
+    def stripDict(dictionary: Dict) -> Dict:
+        return {k: v for k, v in dictionary.items() if v is not None}
+
+    async def get(self, url: str, params: Optional[Dict] = None) -> ClientResponse:
+        return await self.session.get(url=self.url(url), params=Rests.stripDict(params))
 
     async def post(self, url: str, data: Optional[Dict] = None) -> ClientResponse:
         return await self.session.post(url=self.url(url), data=data)
@@ -64,7 +68,8 @@ class Mender(Rests):
     def __init__(self, base_url: str, session: aiohttp.ClientSession = aiohttp.ClientSession()):
         super().__init__(base_url, session)
 
-    async def devices_get(self, page: Optional[int] = 1, per_page: Optional[int] = 10, sort: Optional[str] = None, has_group: Optional[bool] = None) -> List[Device]:
+    async def get_devices_paged(self, page: Optional[int] = 1, per_page: Optional[int] = 10, sort: Optional[str] = None,
+                          has_group: Optional[bool] = None) -> List[Device]:
         """
         List devices
 
@@ -78,7 +83,38 @@ class Mender(Rests):
 
         :return: List[Device]
         """
-        return await self.get(f"/inventory/devices", {  "page": page,  "per_page": per_page,  "sort": sort,  "has_group": has_group,  } )
+        res = await self.get(url=f"/inventory/devices",
+                             params={"page": page, "per_page": per_page, "sort": sort, "has_group": has_group, })
+        return list(map(lambda x: jsontofu.decode(x, Device), await res.json()))
+
+    async def get_devices(self, page: Optional[int] = 1, per_page: Optional[int] = 10,
+                                 sort: Optional[str] = None, has_group: Optional[bool] = None) -> List[Device]:
+        """
+        List devices
+
+        GET /devices
+
+        Usage:
+
+        ```
+        async for i in mender.devices_get_paging():
+            print(i)
+        ```
+
+        :param int page: Starting page.
+        :param int per_page: Number of results per page.
+        :param str sort: Supports sorting the device list by attribute values.  The parameter is formatted as a list of attribute names and sort directions, e.g.:  '?sort=attr1:asc, attr2:desc'  will sort by 'attr1' ascending, and then by 'attr2' descending. 'desc' is the default sort direction, and can be omitted.
+        :param bool has_group: If present, limits the results only to devices assigned/not assigned to a group.
+
+        :return: List[Device]
+        """
+        _page = page
+        while True:
+            device_list = await self.get_devices_paged(page=_page, per_page=per_page, sort=sort, has_group=has_group)
+            if len(device_list) == 0: break
+            for device in device_list:
+                yield device
+            _page = _page+1
 
     async def devices_id_delete(self, id: str) -> None:
         """
@@ -158,7 +194,8 @@ class Mender(Rests):
         """
         return await self.get(f"/inventory/groups")
 
-    async def groups_name_devices_get(self, name: str, page: Optional[int] = 1, per_page: Optional[int] = 10) -> List[str]:
+    async def groups_name_devices_get(self, name: str, page: Optional[int] = 1, per_page: Optional[int] = 10) -> List[
+        str]:
         """
         List the devices belonging to a given group
 
@@ -171,7 +208,7 @@ class Mender(Rests):
 
         :return: List[str]
         """
-        return await self.get(f"/inventory/groups/{name}/devices", {  "page": page,  "per_page": per_page,  } )
+        return await self.get(f"/inventory/groups/{name}/devices", {"page": page, "per_page": per_page, })
 
     async def _auth_login_post(self, username: str, password: str) -> None:
         """
@@ -278,4 +315,3 @@ class Mender(Rests):
         :return: None
         """
         return await self.post(f"/useradm/users")
-
