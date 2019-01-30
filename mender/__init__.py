@@ -110,7 +110,7 @@ class Mender(Rests):
         Usage:
 
         ```
-        async for i in mender.devices_get_paging():
+        async for i in mender.get_devices():
             print(i)
         ```
 
