@@ -68,8 +68,12 @@ class Mender(Rests):
     def __init__(self, base_url: str, session: aiohttp.ClientSession = aiohttp.ClientSession()):
         super().__init__(base_url, session)
 
-    async def get_devices_paged(self, page: Optional[int] = 1, per_page: Optional[int] = 10, sort: Optional[str] = None,
-                          has_group: Optional[bool] = None) -> List[Device]:
+    async def get_devices_paged(self,
+                                page: Optional[int] = 1,
+                                per_page: Optional[int] = 10,
+                                sort: Optional[str] = None,
+                                has_group: Optional[bool] = None,
+                                attributes: Optional[Dict[str, Any]] = None) -> List[Device]:
         """
         List devices
 
@@ -83,12 +87,21 @@ class Mender(Rests):
 
         :return: List[Device]
         """
-        res = await self.get(url=f"/inventory/devices",
-                             params={"page": page, "per_page": per_page, "sort": sort, "has_group": has_group, })
+        if attributes != None:
+            res = await self.get(url=f"/inventory/devices",
+                                 params={ "page": page, "per_page": per_page, "sort": sort, "has_group": has_group, **attributes })
+        else:
+            res = await self.get(url=f"/inventory/devices",
+                                 params={ "page": page, "per_page": per_page, "sort": sort, "has_group": has_group })
         return list(map(lambda x: jsontofu.decode(x, Device), await res.json()))
 
-    async def get_devices(self, page: Optional[int] = 1, per_page: Optional[int] = 10,
-                                 sort: Optional[str] = None, has_group: Optional[bool] = None) -> List[Device]:
+    async def get_devices(self,
+                          page: Optional[int] = 1,
+                          per_page: Optional[int] = 10,
+                          sort: Optional[str] = None,
+                          has_group: Optional[bool] = None,
+                          attributes: Optional[Dict[str, Any]] = None
+                          ) -> List[Device]:
         """
         List devices
 
@@ -110,7 +123,8 @@ class Mender(Rests):
         """
         _page = page
         while True:
-            device_list = await self.get_devices_paged(page=_page, per_page=per_page, sort=sort, has_group=has_group)
+            device_list = await self.get_devices_paged(page=_page, per_page=per_page, sort=sort, has_group=has_group,
+                                                       attributes=attributes)
             if len(device_list) == 0: break
             for device in device_list:
                 yield device

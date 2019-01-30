@@ -17,3 +17,6 @@ async def test_login():
     async for device in mender.get_devices():
         print(device)
         assert None != device
+    async for device in mender.get_devices(attributes={"hostname": 'xxx-ffffffffffff'}):
+        print(device)
+        assert None != device

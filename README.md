@@ -11,7 +11,11 @@ print(devices)
 
 # List all devices
 async for device in mender.get_devices():
-  print(device)
+    print(device)
+
+# Filter all devices by attributes
+async for device in mender.get_devices(attributes={"hostname": 'xxx-ffffffffffff'}):
+    print(device)
 ```
 
 ## Device inventory
