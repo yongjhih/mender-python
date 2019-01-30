@@ -5,12 +5,12 @@ from dataclasses import dataclass
 
 @dataclass
 class ArtifactInfo:
+    format: Optional[str] = None
     """
     
     """
-    format: Optional[str]
+    version: Optional[int] = None
     """
     
     """
-    version: Optional[int]
 

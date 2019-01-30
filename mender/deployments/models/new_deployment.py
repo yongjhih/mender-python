@@ -5,9 +5,6 @@ from dataclasses import dataclass
 
 @dataclass
 class NewDeployment:
-    """
-    
-    """
     name: str
     """
     
@@ -17,4 +14,7 @@ class NewDeployment:
     
     """
     devices: List[str]
+    """
+    
+    """
 

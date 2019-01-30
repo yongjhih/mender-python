@@ -5,14 +5,11 @@ from dataclasses import dataclass
 
 @dataclass
 class Device:
+    id: str
     """
     Device identifier.
     """
-    id: str
-    """
-    
-    """
-    finished: Optional[datetime]
+    finished: Optional[datetime] = None
     """
     
     """
@@ -20,21 +17,24 @@ class Device:
     """
     
     """
-    created: Optional[datetime]
+    created: Optional[datetime] = None
     """
     
     """
-    device_type: Optional[str]
+    device_type: Optional[str] = None
     """
-    Availability of the device&#39;s deployment log.
+    
     """
     log: bool
     """
+    Availability of the device&#39;s deployment log.
+    """
+    state: Optional[str] = None
+    """
     State reported by device
     """
-    state: Optional[str]
+    substate: Optional[str] = None
     """
     Additional state information
     """
-    substate: Optional[str]
 

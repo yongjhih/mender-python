@@ -5,8 +5,8 @@ from dataclasses import dataclass
 
 @dataclass
 class ArtifactTypeInfo:
+    type: Optional[str] = None
     """
     
     """
-    type: Optional[str]
 

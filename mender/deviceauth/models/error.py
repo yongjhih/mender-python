@@ -5,8 +5,8 @@ from dataclasses import dataclass
 
 @dataclass
 class Error:
+    error: Optional[str] = None
     """
     Description of the error
     """
-    error: Optional[str]
 

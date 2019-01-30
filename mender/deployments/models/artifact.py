@@ -5,9 +5,6 @@ from dataclasses import dataclass
 
 @dataclass
 class Artifact:
-    """
-    
-    """
     name: str
     """
     
@@ -22,19 +19,22 @@ class Artifact:
     """
     id: str
     """
+    
+    """
+    signed: Optional[bool] = None
+    """
     Idicates if artifact is signed or not.
-    """
-    signed: Optional[bool]
-    """
-    Represents creation / last edition of any of the artifact properties. 
     """
     modified: datetime
     """
+    Represents creation / last edition of any of the artifact properties. 
+    """
+    info: Optional[ArtifactInfo] = None
+    """
     
     """
-    info: Optional[ArtifactInfo]
+    updates: Optional[Update] = None
     """
     
     """
-    updates: Optional[Update]
 

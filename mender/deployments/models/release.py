@@ -5,12 +5,12 @@ from dataclasses import dataclass
 
 @dataclass
 class Release:
+    name: Optional[str] = None
     """
     release name. 
     """
-    name: Optional[str]
+    artifacts: Optional[Artifact] = None
     """
     list of artifacts for this release. 
     """
-    artifacts: Optional[Artifact]
 

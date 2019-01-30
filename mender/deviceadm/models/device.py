@@ -5,32 +5,32 @@ from dataclasses import dataclass
 
 @dataclass
 class Device:
+    id: str
     """
     Authentication data set identifier.
     """
-    id: str
+    device_id: str
     """
     System assigned device identifier.
     """
-    device_id: str
+    device_identity: str
     """
     Identity data
     """
-    device_identity: str
+    key: str
     """
     Device public key
     """
-    key: str
+    status: str
     """
     Status of the admission process for device authentication data set
     """
-    status: str
+    attributes: Attributes
     """
     
     """
-    attributes: Attributes
+    request_time: str
     """
     Server-side timestamp of the request reception.
     """
-    request_time: str
 

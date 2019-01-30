@@ -5,9 +5,6 @@ from dataclasses import dataclass
 
 @dataclass
 class Deployment:
-    """
-    
-    """
     created: datetime
     """
     
@@ -24,7 +21,7 @@ class Deployment:
     """
     
     """
-    finished: Optional[datetime]
+    finished: Optional[datetime] = None
     """
     
     """
@@ -36,5 +33,8 @@ class Deployment:
     """
     
     """
-    artifacts: Optional[List[str]]
+    artifacts: Optional[List[str]] = None
+    """
+    
+    """
 

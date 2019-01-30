@@ -5,12 +5,12 @@ from dataclasses import dataclass
 
 @dataclass
 class ArtifactLink:
-    """
-    
-    """
     uri: str
     """
     
     """
     expire: datetime
+    """
+    
+    """
 

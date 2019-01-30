@@ -5,40 +5,40 @@ from dataclasses import dataclass
 
 @dataclass
 class DeploymentStatistics:
+    success: int
     """
     Number of successful deployments.
     """
-    success: int
+    pending: int
     """
     Number of pending deployments.
     """
-    pending: int
+    downloading: int
     """
     Number of deployments being downloaded.
     """
-    downloading: int
+    rebooting: int
     """
     Number of deployments devices are rebooting into.
     """
-    rebooting: int
+    installing: int
     """
     Number of deployments devices being installed.
     """
-    installing: int
+    failure: int
     """
     Number of failed deployments.
     """
-    failure: int
+    noartifact: int
     """
     Do not have appropriate artifact for device type.
     """
-    noartifact: int
+    already_installed: int
     """
     Number of devices unaffected by upgrade, since they are already running the specified software version.
     """
-    already_installed: int
+    aborted: int
     """
     Number of deployments aborted by user.
     """
-    aborted: int
 

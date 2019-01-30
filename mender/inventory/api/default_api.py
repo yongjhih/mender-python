@@ -10,16 +10,13 @@ from typing import Any, Dict, List, Optional, NewType, TypeVar
 import aiohttp
 import jsonpickle
 import jsontofu
-from aiohttp import ClientResponse
+from aiohttp.client import ClientSession
+from aiohttp.client_ws import ClientWebSocketResponse
+from aiohttp.http_websocket import WSMessage
+from dataclasses import dataclass
+from requests.exceptions import HTTPError
 
-from .device import Device
-from .group import Group
-from .attribute import Attribute
-from .error import Error
-from .user import User
-from .user_new import UserNew
-from .user_update import UserUpdate
-
+#from .* import *
 
 class JwtAuth(aiohttp.helpers.BasicAuth):
     def __init__(self, access_token: str):
@@ -60,9 +57,11 @@ class Rests():
         return await self.session.head(url=self.url(url), data=data)
 
 
-class Mender(Rests):
-    def __init__(self, base_url: str, session: aiohttp.ClientSession = aiohttp.ClientSession()):
+class DefaultApi(Rests):
+
+    def __init__(self, base_url: str = 'https://docker.mender.io/api/management/v1/inventory', session: aiohttp.ClientSession = aiohttp.ClientSession()):
         super().__init__(base_url, session)
+
 
     async def devices_get(self, page: Optional[int] = 1, per_page: Optional[int] = 10, sort: Optional[str] = None, has_group: Optional[bool] = None) -> List[Device]:
         """
@@ -73,12 +72,12 @@ class Mender(Rests):
 
         :param int page: Starting page.
         :param int per_page: Number of results per page.
-        :param str sort: Supports sorting the device list by attribute values.  The parameter is formatted as a list of attribute names and sort directions, e.g.:  '?sort=attr1:asc, attr2:desc'  will sort by 'attr1' ascending, and then by 'attr2' descending. 'desc' is the default sort direction, and can be omitted.
+        :param str sort: Supports sorting the device list by attribute values.  The parameter is formatted as a list of attribute names and sort directions, e.g.:  '?sort=attr1:asc, attr2:desc'  will sort by 'attr1' ascending, and then by 'attr2' descending. 'desc' is the default sort direction, and can be omitted. 
         :param bool has_group: If present, limits the results only to devices assigned/not assigned to a group.
 
         :return: List[Device]
         """
-        return await self.get(f"/inventory/devices", {  "page": page,  "per_page": per_page,  "sort": sort,  "has_group": has_group,  } )
+        return await self.get(f"/devices", {  "page": page,  "per_page": per_page,  "sort": sort,  "has_group": has_group,  } )
 
     async def devices_id_delete(self, id: str) -> None:
         """
@@ -91,7 +90,7 @@ class Mender(Rests):
 
         :return: None
         """
-        return await self.delete(f"/inventory/devices/{id}")
+        return await self.delete(f"/devices/{id}")
 
     async def devices_id_get(self, id: str) -> Device:
         """
@@ -104,7 +103,7 @@ class Mender(Rests):
 
         :return: Device
         """
-        return await self.get(f"/inventory/devices/{id}")
+        return await self.get(f"/devices/{id}")
 
     async def devices_id_group_get(self, id: str) -> Group:
         """
@@ -117,7 +116,7 @@ class Mender(Rests):
 
         :return: Group
         """
-        return await self.get(f"/inventory/devices/{id}/group")
+        return await self.get(f"/devices/{id}/group")
 
     async def devices_id_group_name_delete(self, id: str, name: str) -> None:
         """
@@ -131,7 +130,7 @@ class Mender(Rests):
 
         :return: None
         """
-        return await self.delete(f"/inventory/devices/{id}/group/{name}")
+        return await self.delete(f"/devices/{id}/group/{name}")
 
     async def devices_id_group_put(self, id: str) -> None:
         """
@@ -144,7 +143,7 @@ class Mender(Rests):
 
         :return: None
         """
-        return await self.put(f"/inventory/devices/{id}/group")
+        return await self.put(f"/devices/{id}/group")
 
     async def groups_get(self) -> List[str]:
         """
@@ -156,7 +155,7 @@ class Mender(Rests):
 
         :return: List[str]
         """
-        return await self.get(f"/inventory/groups")
+        return await self.get(f"/groups")
 
     async def groups_name_devices_get(self, name: str, page: Optional[int] = 1, per_page: Optional[int] = 10) -> List[str]:
         """
@@ -171,111 +170,5 @@ class Mender(Rests):
 
         :return: List[str]
         """
-        return await self.get(f"/inventory/groups/{name}/devices", {  "page": page,  "per_page": per_page,  } )
-
-    async def _auth_login_post(self, username: str, password: str) -> None:
-        """
-        Log in to Mender
-
-        POST /auth/login
-
-
-
-        :return: None
-        """
-        self.session._default_auth = aiohttp.helpers.BasicAuth(username, password)
-        return await self.post(f"/useradm/auth/login")
-
-    async def login(self, username: str, password: str) -> str:
-        res = await self._auth_login_post(username, password)
-        token = await res.text()
-        self.session._default_auth = JwtAuth(token)
-        return token
-
-    async def settings_get(self) -> object:
-        """
-        Get user settings
-
-        GET /settings
-
-
-
-        :return: object
-        """
-        return await self.get(f"/useradm/settings")
-
-    async def settings_post(self) -> None:
-        """
-        Set user settings
-
-        POST /settings
-
-
-
-        :return: None
-        """
-        return await self.post(f"/useradm/settings")
-
-    async def users_get(self) -> List[User]:
-        """
-        List users
-
-        GET /users
-
-
-
-        :return: List[User]
-        """
-        return await self.get(f"/useradm/users")
-
-    async def users_id_delete(self, id: str) -> None:
-        """
-        Remove user from the system
-
-        DELETE /users/{id}
-
-        :param str id: User id. (required)
-
-
-        :return: None
-        """
-        return await self.delete(f"/useradm/users/{id}")
-
-    async def users_id_get(self, id: str) -> User:
-        """
-        Get user information
-
-        GET /users/{id}
-
-        :param str id: User id. (required)
-
-
-        :return: User
-        """
-        return await self.get(f"/useradm/users/{id}")
-
-    async def users_id_put(self, id: str) -> None:
-        """
-        Update user information
-
-        PUT /users/{id}
-
-        :param str id: User id. (required)
-
-
-        :return: None
-        """
-        return await self.put(f"/useradm/users/{id}")
-
-    async def users_post(self) -> None:
-        """
-        Create user
-
-        POST /users
-
-
-
-        :return: None
-        """
-        return await self.post(f"/useradm/users")
+        return await self.get(f"/groups/{name}/devices", {  "page": page,  "per_page": per_page,  } )
 

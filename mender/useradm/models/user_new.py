@@ -4,13 +4,13 @@ from typing import Any, Dict, List, Optional, NewType, TypeVar
 from dataclasses import dataclass
 
 @dataclass
-class StorageLimit:
-    limit: int
+class UserNew:
+    email: str
     """
-    Storage limit in bytes. If set to 0 - there is no limit for storage. 
+    A unique email address. Invalid characters are non-ascii and &#39;+&#39;.
     """
-    usage: int
+    password: str
     """
-    Current storage usage in bytes. 
+    Password.
     """
 

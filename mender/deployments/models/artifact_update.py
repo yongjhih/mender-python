@@ -5,8 +5,8 @@ from dataclasses import dataclass
 
 @dataclass
 class ArtifactUpdate:
+    description: Optional[str] = None
     """
     
     """
-    description: Optional[str]
 

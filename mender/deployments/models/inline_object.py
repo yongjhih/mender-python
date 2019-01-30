@@ -5,8 +5,8 @@ from dataclasses import dataclass
 
 @dataclass
 class InlineObject:
+    status: str
     """
     
     """
-    status: str
 

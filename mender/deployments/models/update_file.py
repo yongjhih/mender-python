@@ -5,20 +5,20 @@ from dataclasses import dataclass
 
 @dataclass
 class UpdateFile:
+    name: Optional[str] = None
     """
     
     """
-    name: Optional[str]
+    checksum: Optional[str] = None
     """
     
     """
-    checksum: Optional[str]
+    size: Optional[int] = None
     """
     
     """
-    size: Optional[int]
+    date: Optional[datetime] = None
     """
     
     """
-    date: Optional[datetime]
 

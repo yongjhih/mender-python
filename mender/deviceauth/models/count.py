@@ -5,8 +5,8 @@ from dataclasses import dataclass
 
 @dataclass
 class Count:
+    count: Optional[int] = None
     """
     The count of requested items.
     """
-    count: Optional[int]
 

@@ -5,16 +5,16 @@ from dataclasses import dataclass
 
 @dataclass
 class IdentityData:
+    mac: Optional[str] = None
     """
     MAC address.
     """
-    mac: Optional[str]
+    sku: Optional[str] = None
     """
     Stock keeping unit.
     """
-    sku: Optional[str]
+    sn: Optional[str] = None
     """
     Serial number.
     """
-    sn: Optional[str]
 

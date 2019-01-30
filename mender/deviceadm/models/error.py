@@ -5,12 +5,12 @@ from dataclasses import dataclass
 
 @dataclass
 class Error:
+    error: Optional[str] = None
     """
     Description of the error.
     """
-    error: Optional[str]
+    request_id: Optional[str] = None
     """
     Request ID (same as in X-MEN-RequestID header).
     """
-    request_id: Optional[str]
 

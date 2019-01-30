@@ -5,32 +5,32 @@ from dataclasses import dataclass
 
 @dataclass
 class Device:
+    id: Optional[str] = None
     """
     Mender assigned Device ID.
     """
-    id: Optional[str]
+    identity_data: Optional[IdentityData] = None
     """
     
     """
-    identity_data: Optional[IdentityData]
+    status: Optional[str] = None
     """
     
     """
-    status: Optional[str]
+    created_ts: Optional[str] = None
     """
     Created timestamp
     """
-    created_ts: Optional[str]
+    updated_ts: Optional[str] = None
     """
     Updated timestamp
     """
-    updated_ts: Optional[str]
+    auth_sets: Optional[AuthSet] = None
     """
     
     """
-    auth_sets: Optional[AuthSet]
+    decommissioning: Optional[bool] = None
     """
     Devices that are part of ongoing decomissioning process will return True
     """
-    decommissioning: Optional[bool]
 

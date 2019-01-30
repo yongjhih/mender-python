@@ -5,16 +5,16 @@ from dataclasses import dataclass
 
 @dataclass
 class NewDevice:
+    device_identity: str
     """
     The identity data of the device.
     """
-    device_identity: str
+    key: str
     """
     Device public key
     """
-    key: str
+    device_id: str
     """
     System-assigned device ID.
     """
-    device_id: str
 
