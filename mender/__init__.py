@@ -5,13 +5,12 @@ import asyncio
 import ssl
 import time
 import uuid
-from typing import Any, Dict, List, Optional, NewType, TypeVar, Iterable
+from typing import Any, Dict, List, Optional, NewType, TypeVar, Iterable, AsyncIterable
 
 import aiohttp
 import jsonpickle
 import jsontofu
 from aiohttp import ClientResponse
-from collections import AsyncIterable, AsyncGenerator
 
 from .device import Device
 from .group import Group
@@ -127,7 +126,7 @@ class Mender(Rests):
                                sort: Optional[str] = None,
                                has_group: Optional[bool] = None,
                                attributes: Optional[Dict[str, Any]] = None
-                               ) -> Iterable[List[Device]]:
+                               ) -> AsyncIterable[List[Device]]:
         """
         List devices
 
@@ -140,7 +139,7 @@ class Mender(Rests):
         :param str sort: Supports sorting the device list by attribute values.  The parameter is formatted as a list of attribute names and sort directions, e.g.:  '?sort=attr1:asc, attr2:desc'  will sort by 'attr1' ascending, and then by 'attr2' descending. 'desc' is the default sort direction, and can be omitted.
         :param bool has_group: If present, limits the results only to devices assigned/not assigned to a group.
 
-        :return: Iterable[List[Device]]
+        :return: AsyncIterable[List[Device]]
         """
         _page = page
         res = await self._get_devices_paged(page=_page, per_page=per_page, sort=sort, has_group=has_group,
@@ -167,7 +166,7 @@ class Mender(Rests):
                           sort: Optional[str] = None,
                           has_group: Optional[bool] = None,
                           attributes: Optional[Dict[str, Any]] = None
-                          ) -> Iterable[Device]:
+                          ) -> AsyncIterable[Device]:
         """
         List devices
 
@@ -185,7 +184,7 @@ class Mender(Rests):
         :param str sort: Supports sorting the device list by attribute values.  The parameter is formatted as a list of attribute names and sort directions, e.g.:  '?sort=attr1:asc, attr2:desc'  will sort by 'attr1' ascending, and then by 'attr2' descending. 'desc' is the default sort direction, and can be omitted.
         :param bool has_group: If present, limits the results only to devices assigned/not assigned to a group.
 
-        :return: Iterable[Device]
+        :return: AsyncIterable[Device]
         """
         async for res in self._get_devicesList(page=page, per_page=per_page, sort=sort, has_group=has_group,
                                                attributes=attributes):
