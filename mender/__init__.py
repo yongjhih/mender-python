@@ -32,9 +32,9 @@ class JwtAuth(aiohttp.helpers.BasicAuth):
 
 
 class Rests():
-    def __init__(self, base_url: str, session: aiohttp.ClientSession = aiohttp.ClientSession()):
+    def __init__(self, base_url: str, session: Optional[aiohttp.ClientSession] = None):
         self.base_url = base_url
-        self.session = session
+        self.session = session if session else aiohttp.ClientSession()
 
     def url(self, url: str) -> str:
         return url if url.startswith('http://') or url.startswith('https://') else f'{self.base_url}/{url}'
@@ -68,8 +68,8 @@ class Rests():
 
 
 class Mender(Rests):
-    def __init__(self, base_url: str, session: aiohttp.ClientSession = aiohttp.ClientSession()):
-        super().__init__(base_url, session)
+    def __init__(self, base_url: str, session: Optional[aiohttp.ClientSession] = None):
+        super().__init__(base_url, session if session else aiohttp.ClientSession())
 
     async def _get_devices_paged(self,
                                  page: Optional[int] = 1,
@@ -149,8 +149,8 @@ class Mender(Rests):
         yield res
 
         while True:
-            if res.links and res.links['next']:
-                res = await self.get(str(res.links['next']['url']))
+            if res.links and res.links.get('next'):
+                res = await self.get(str(res.links.get('next').get('url')))
                 yield res
             else:
                 if await res.json():

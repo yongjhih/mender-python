@@ -16,6 +16,9 @@ async for device in mender.get_devices():
 # Filter all devices by attributes
 async for device in mender.get_devices(attributes={"hostname": 'xxx-ffffffffffff'}):
     print(device)
+
+# Remember to close during finishing
+await mender.session.close()
 ```
 
 ## Installation
