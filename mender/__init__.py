@@ -5,12 +5,13 @@ import asyncio
 import ssl
 import time
 import uuid
-from typing import Any, Dict, List, Optional, NewType, TypeVar
+from typing import Any, Dict, List, Optional, NewType, TypeVar, Iterable
 
 import aiohttp
 import jsonpickle
 import jsontofu
 from aiohttp import ClientResponse
+from collections import AsyncIterable, AsyncGenerator
 
 from .device import Device
 from .group import Group
@@ -71,11 +72,11 @@ class Mender(Rests):
         super().__init__(base_url, session)
 
     async def _get_devices_paged(self,
-                                page: Optional[int] = 1,
-                                per_page: Optional[int] = 10,
-                                sort: Optional[str] = None,
-                                has_group: Optional[bool] = None,
-                                attributes: Optional[Dict[str, Any]] = None) -> ClientResponse:
+                                 page: Optional[int] = 1,
+                                 per_page: Optional[int] = 10,
+                                 sort: Optional[str] = None,
+                                 has_group: Optional[bool] = None,
+                                 attributes: Optional[Dict[str, Any]] = None) -> ClientResponse:
         """
         List devices
 
@@ -87,21 +88,22 @@ class Mender(Rests):
         :param str sort: Supports sorting the device list by attribute values.  The parameter is formatted as a list of attribute names and sort directions, e.g.:  '?sort=attr1:asc, attr2:desc'  will sort by 'attr1' ascending, and then by 'attr2' descending. 'desc' is the default sort direction, and can be omitted.
         :param bool has_group: If present, limits the results only to devices assigned/not assigned to a group.
 
-        :return: List[Device]
+        :return: ClientResponse
         """
         if attributes != None:
             return await self.get(url=f"/inventory/devices",
-                                 params={ "page": page, "per_page": per_page, "sort": sort, "has_group": has_group, **attributes })
+                                  params={"page": page, "per_page": per_page, "sort": sort, "has_group": has_group,
+                                          **attributes})
         else:
             return await self.get(url=f"/inventory/devices",
-                                 params={ "page": page, "per_page": per_page, "sort": sort, "has_group": has_group })
+                                  params={"page": page, "per_page": per_page, "sort": sort, "has_group": has_group})
 
     async def get_devices_paged(self,
                                 page: Optional[int] = 1,
                                 per_page: Optional[int] = 10,
                                 sort: Optional[str] = None,
                                 has_group: Optional[bool] = None,
-                                attributes: Optional[Dict[str, Any]] = None) -> List[Device]:
+                                attributes: Optional[Dict[str, Any]] = None) -> Iterable[Device]:
         """
         List devices
 
@@ -113,19 +115,19 @@ class Mender(Rests):
         :param str sort: Supports sorting the device list by attribute values.  The parameter is formatted as a list of attribute names and sort directions, e.g.:  '?sort=attr1:asc, attr2:desc'  will sort by 'attr1' ascending, and then by 'attr2' descending. 'desc' is the default sort direction, and can be omitted.
         :param bool has_group: If present, limits the results only to devices assigned/not assigned to a group.
 
-        :return: List[Device]
+        :return: Iterable[Device]
         """
         res = await self._get_devices_paged(page=page, per_page=per_page, sort=sort, has_group=has_group,
-                                       attributes=attributes)
-        return list(map(lambda x: jsontofu.decode(x, Device), await res.json()))
+                                            attributes=attributes)
+        return map(lambda x: jsontofu.decode(x, Device), await res.json())
 
     async def _get_devicesList(self,
-                          page: Optional[int] = 1,
-                          per_page: Optional[int] = 10,
-                          sort: Optional[str] = None,
-                          has_group: Optional[bool] = None,
-                          attributes: Optional[Dict[str, Any]] = None
-                          ) -> List[List[Device]]:
+                               page: Optional[int] = 1,
+                               per_page: Optional[int] = 10,
+                               sort: Optional[str] = None,
+                               has_group: Optional[bool] = None,
+                               attributes: Optional[Dict[str, Any]] = None
+                               ) -> Iterable[List[Device]]:
         """
         List devices
 
@@ -138,7 +140,7 @@ class Mender(Rests):
         :param str sort: Supports sorting the device list by attribute values.  The parameter is formatted as a list of attribute names and sort directions, e.g.:  '?sort=attr1:asc, attr2:desc'  will sort by 'attr1' ascending, and then by 'attr2' descending. 'desc' is the default sort direction, and can be omitted.
         :param bool has_group: If present, limits the results only to devices assigned/not assigned to a group.
 
-        :return: [List[List[Device]]
+        :return: Iterable[List[Device]]
         """
         _page = page
         res = await self._get_devices_paged(page=_page, per_page=per_page, sort=sort, has_group=has_group,
@@ -165,7 +167,7 @@ class Mender(Rests):
                           sort: Optional[str] = None,
                           has_group: Optional[bool] = None,
                           attributes: Optional[Dict[str, Any]] = None
-                          ) -> List[Device]:
+                          ) -> Iterable[Device]:
         """
         List devices
 
@@ -183,10 +185,10 @@ class Mender(Rests):
         :param str sort: Supports sorting the device list by attribute values.  The parameter is formatted as a list of attribute names and sort directions, e.g.:  '?sort=attr1:asc, attr2:desc'  will sort by 'attr1' ascending, and then by 'attr2' descending. 'desc' is the default sort direction, and can be omitted.
         :param bool has_group: If present, limits the results only to devices assigned/not assigned to a group.
 
-        :return: List[Device]
+        :return: Iterable[Device]
         """
         async for res in self._get_devicesList(page=page, per_page=per_page, sort=sort, has_group=has_group,
-                                           attributes=attributes):
+                                               attributes=attributes):
             for device in await res.json():
                 yield jsontofu.decode(device, Device)
 
