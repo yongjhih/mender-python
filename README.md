@@ -84,3 +84,9 @@ Class | Method | HTTP request | Description
 
 * https://github.com/yongjhih/mender.js
 * https://github.com/yongjhih/openapi-generator/tree/mender/modules/openapi-generator/src/main/resources/python-typing-client
+
+## Stack
+
+* PEP 525 - Async Generator (require 3.6)
+* PEP 557 - Dataclass (require 3.7, but there is a backport library for 3.6)
+* PEP 498 - Formatted String Literals (require 3.6, but ther is a backport library for <3.6)
