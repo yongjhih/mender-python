@@ -5,7 +5,8 @@ import asyncio
 import ssl
 import time
 import uuid
-from typing import Any, Dict, List, Optional, NewType, TypeVar, Iterable, AsyncIterable
+from types import TracebackType
+from typing import Any, Dict, List, Optional, NewType, TypeVar, Iterable, AsyncIterable, Type
 
 import aiohttp
 import jsonpickle
@@ -31,6 +32,16 @@ class JwtAuth(aiohttp.helpers.BasicAuth):
 
 
 class Rests():
+
+    async def __aenter__(self) -> 'Rests':
+        return self
+
+    async def __aexit__(self,
+                        exc_type: Optional[Type[BaseException]],
+                        exc_val: Optional[BaseException],
+                        exc_tb: Optional[TracebackType]) -> None:
+        await self.session.close()
+
     def __init__(self, base_url: str, session: Optional[aiohttp.ClientSession] = None):
         self.base_url = base_url
         self.session = session if session else aiohttp.ClientSession()

@@ -3,20 +3,25 @@
 ## Usage
 
 ```py
+async with Mender(base_url = 'https://docker.mender.io/api/management/v1') as mender:
+    # List devices on page 1
+    devices = await mender.get_devices_paged(page=1)
+    print(devices)
+
+    # List all devices
+    async for device in mender.get_devices():
+        print(device)
+
+    # Filter all devices by attributes
+    async for device in mender.get_devices(attributes={"hostname": 'xxx-ffffffffffff'}):
+        print(device)
+```
+
+or close your session by yourself:
+
+```py
 mender = Mender(base_url = 'https://docker.mender.io/api/management/v1')
-
-# List devices on page 1
-devices = await mender.get_devices_paged(page=1)
-print(devices)
-
-# List all devices
-async for device in mender.get_devices():
-    print(device)
-
-# Filter all devices by attributes
-async for device in mender.get_devices(attributes={"hostname": 'xxx-ffffffffffff'}):
-    print(device)
-
+# ...
 # Remember to close during finishing
 await mender.session.close()
 ```
